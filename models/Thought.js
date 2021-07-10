@@ -37,7 +37,7 @@ const ThoughtSchema = new Schema({
         //getter to format date
     },
     username: {
-        type: string,
+        type: String,
         required: true
     },
     reactions: [ReactionSchema]
