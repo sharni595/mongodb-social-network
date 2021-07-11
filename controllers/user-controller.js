@@ -13,7 +13,7 @@ const UserController = {
         }
     },
 
-    createUser: async (req, res, next) => {
+    createUser: async (req, res) => {
         try {
             console.log(req.body);
             console.log(User);
