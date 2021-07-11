@@ -66,7 +66,7 @@ const UserController = {
     deleteUser: async ({ params }, res) => {
         try {
             await User.findOneAndDelete({ _id: params.userId})
-            res.status(200).json({ message: `user have been deleted!`})
+            res.status(200).json({ message: `user has been deleted!`})
         }
         catch(err) {
             console.log(err);

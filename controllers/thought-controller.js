@@ -1,4 +1,5 @@
 const { Thought, User } = require('../models');
+const { populate } = require('../models/User');
 //require date formatting function
 
 const ThoughtController = {
@@ -36,7 +37,7 @@ const ThoughtController = {
     oneThought: async ({ params }, res) => {
         try {
             const oneThought = await Thought.findOne({ _id: params.thoughtId})
-
+            //.populate()
             console.log(params.thoughtId);
 
             if (!oneThought) {
@@ -75,6 +76,46 @@ const ThoughtController = {
         try {
             await Thought.findOneAndDelete({ _id: params.thoughtId})
             res.status(200).json({ message: `Thought has been deleted!`})
+        }
+        catch(err) {
+            console.log(err);
+            res.status(500).json(err);
+        }
+    },
+
+    createReaction: async ({ params, body }, res) => {
+        try {
+            const addReaction = await Thought.findOneAndUpdate(
+                {_id: params.thoughtId},
+                { $addToSet: { reactions: body } },
+                { new: true, runValidators: true }
+            )
+
+            if (!addReaction) {
+                res.status(404).json({ message: 'No thought found with this id' });
+                return;
+            }
+            res.json(addReaction);
+        }
+        catch(err) {
+            console.log(err);
+            res.status(500).json(err);
+        }
+    },
+
+    deleteReaction: async ({ params }, res) => {
+        try {
+            const removeReaction = await Thought.findOneAndUpdate(
+                {_id: params.thoughtId},
+                { $pull: { reactions: { reactionId: params.reactionId } } },
+                { new: true, runValidators: true }
+            )
+
+            if (!removeReaction) {
+                res.status(404).json({ message: 'No reaction found with this id' });
+                return;
+            }
+            res.json({ message: 'reaction has been deleted!'});
         }
         catch(err) {
             console.log(err);
